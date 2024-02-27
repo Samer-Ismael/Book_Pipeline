@@ -1,6 +1,7 @@
 package com.BookPipeline.BookPipeline.controller;
 
 import com.BookPipeline.BookPipeline.model.Author;
+import com.BookPipeline.BookPipeline.model.AuthorPutRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,10 @@ public class AuthorController {
     }
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteAuthor(@PathVariable Long id) {
+        return ResponseEntity.ok().build();
+    }
+    @PutMapping("")
+    public ResponseEntity<Author> updateAuthor(@RequestBody AuthorPutRequest authorPutRequest)  {
         return ResponseEntity.ok().build();
     }
 }
