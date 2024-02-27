@@ -1,6 +1,6 @@
 package com.BookPipeline.BookPipeline.controller;
 
-import com.BookPipeline.BookPipeline.model.Book;
+import com.BookPipeline.BookPipeline.entity.Book;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

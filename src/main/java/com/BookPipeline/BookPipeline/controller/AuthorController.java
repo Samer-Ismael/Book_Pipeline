@@ -1,7 +1,8 @@
 package com.BookPipeline.BookPipeline.controller;
 
-import com.BookPipeline.BookPipeline.model.Author;
+import com.BookPipeline.BookPipeline.entity.Author;
 import com.BookPipeline.BookPipeline.model.AuthorPutRequest;
+import com.BookPipeline.BookPipeline.model.DeleteResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +23,11 @@ public class AuthorController {
         return ResponseEntity.ok().build();
     }
     @PostMapping("")
-    public ResponseEntity<String> saveAuthor(@RequestBody Author author) {
+    public ResponseEntity<Author> saveAuthor(@RequestBody Author author) {
         return ResponseEntity.ok().build();
     }
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteAuthor(@PathVariable Long id) {
+    public ResponseEntity<DeleteResponse> deleteAuthor(@PathVariable Long id) {
         return ResponseEntity.ok().build();
     }
     @PutMapping("")
