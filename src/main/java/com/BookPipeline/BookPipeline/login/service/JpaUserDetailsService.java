@@ -3,6 +3,8 @@ package com.BookPipeline.BookPipeline.login.service;
 import com.BookPipeline.BookPipeline.login.model.SecurityUser;
 import com.BookPipeline.BookPipeline.login.model.UserEntity;
 import com.BookPipeline.BookPipeline.login.repo.UserRepo;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
