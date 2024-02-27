@@ -1,15 +1,10 @@
 package com.BookPipeline.BookPipeline.service;
 
 import com.BookPipeline.BookPipeline.entity.Author;
-import com.BookPipeline.BookPipeline.entity.Book;
-import com.BookPipeline.BookPipeline.model.AuthorPutRequest;
-import com.BookPipeline.BookPipeline.model.DeleteResponse;
 import com.BookPipeline.BookPipeline.repository.AuthorRepository;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
