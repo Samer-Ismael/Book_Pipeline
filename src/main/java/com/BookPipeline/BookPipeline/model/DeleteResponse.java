@@ -1,11 +1,7 @@
 package com.BookPipeline.BookPipeline.model;
 
-import lombok.Data;
-
-@Data
-public class DeleteResponse {
-    private Status message;
-    enum Status {
+public record DeleteResponse(DeleteResponseMessage message) {
+    public enum DeleteResponseMessage {
         SUCCESS, FAILURE
     }
 }

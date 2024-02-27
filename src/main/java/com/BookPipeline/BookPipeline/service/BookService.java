@@ -37,4 +37,8 @@ public class BookService {
 
         return bookRepo.save(bookToUpdate);
     }
+
+    public List<Book> findBooksByAuthorId(Long id) {
+        return bookRepo.findAllByAuthorId(id);
+    }
 }
