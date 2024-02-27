@@ -21,7 +21,7 @@ import java.io.IOException;
 @Component
 public class JWTAuthFilter extends OncePerRequestFilter {
     private final JWTService jwtService;
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     // Constructor for JWTAuthFilter, it takes a JWTService and a UserDetailsService as parameters.
     public JWTAuthFilter(JWTService jwtService, UserDetailsService userDetailsService) {
