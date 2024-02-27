@@ -26,7 +26,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final UserDetailsService userDetailsService;
-    private JWTAuthFilter jwtAuthFilter;
+    private final JWTAuthFilter jwtAuthFilter;
     private static final String[] AUTH_WHITELIST = {
             "/auth/register",
             "/auth/login",
