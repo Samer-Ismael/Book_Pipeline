@@ -47,4 +47,19 @@ public class AuthorService {
 
         return authorRepo.save(authorToUpdate);
     }
+
+    // Samers sätt:
+    // först hämta author med optional
+    // om den inte finns returner notfound error
+    // finns den- sätt nya värden på det som inte är null, annars använd samma värden som i optional author
+    // sen save()
+
+        /*if (userService.existsById(id)) {
+        UserEntity newUser = userService.findById(id).get();
+        // that will make it easier to update the user, if the field is null, it will not be updated
+        if (updatedUser.getPassword() == null) updatedUser.setPassword(newUser.getPassword());
+        if (updatedUser.getRole() == null) updatedUser.setRole(newUser.getRole());
+        if (updatedUser.getUsername() == null) updatedUser.setUsername(newUser.getUsername());
+
+        userService.updateUserById(id, updatedUser);*/
 }

@@ -1,6 +1,7 @@
 package com.BookPipeline.BookPipeline.service;
 
 import com.BookPipeline.BookPipeline.entity.Book;
+import com.BookPipeline.BookPipeline.login.model.UserEntity;
 import com.BookPipeline.BookPipeline.repository.BookRepository;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,21 @@ public class BookService {
 
         return bookRepo.save(bookToUpdate);
     }
+
+    // Samers sätt:
+    // först hämta book med optional
+    // om den inte finns returner notfound error
+    // finns den- sätt nya värden på det som inte är null, annars använd samma värden som i optional book
+    // sen save()
+
+        /*if (userService.existsById(id)) {
+        UserEntity newUser = userService.findById(id).get();
+        // that will make it easier to update the user, if the field is null, it will not be updated
+        if (updatedUser.getPassword() == null) updatedUser.setPassword(newUser.getPassword());
+        if (updatedUser.getRole() == null) updatedUser.setRole(newUser.getRole());
+        if (updatedUser.getUsername() == null) updatedUser.setUsername(newUser.getUsername());
+
+        userService.updateUserById(id, updatedUser);*/
 
     public List<Book> findBooksByAuthorId(Long id) {
         if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");
