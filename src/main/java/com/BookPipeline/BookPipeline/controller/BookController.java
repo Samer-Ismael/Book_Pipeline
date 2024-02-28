@@ -38,11 +38,14 @@ public class BookController {
     @PostMapping
     public ResponseEntity<String> saveBook(@RequestBody Book book) {
         try {
-            return bookService.saveBook(book);
+            Book savedBook = bookService.saveBook(book);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Successfully saved book");
         } catch (NoResultException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
     @DeleteMapping("/{id}")

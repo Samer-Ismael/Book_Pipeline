@@ -4,8 +4,6 @@ import com.BookPipeline.BookPipeline.entity.Book;
 import com.BookPipeline.BookPipeline.repository.BookRepository;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,18 +23,18 @@ public class BookService {
         return bookRepo.findById(id).orElseThrow(() -> new NoResultException("Book not found"));
     }
 
-    public ResponseEntity<String> saveBook(Book book) {
+    public Book saveBook(Book book) {
         if (book.getTitle() == null || book.getAuthor() == null || book.getAuthor().getName() == null || book.getAuthor().getId() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Title or Author cannot be empty");
+            throw new IllegalArgumentException("Title or Author cannot be empty");
         }
         if (book.getTitle().isEmpty() || book.getAuthor().getName().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Title or Author cannot be empty");
+            throw new IllegalArgumentException("Title or Author cannot be empty");
         }
+
         // Check if the author exists
         authorService.findAuthorById(book.getAuthor().getId());
 
-        bookRepo.save(book);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return bookRepo.save(book);
     }
 
     public void deleteBookById(Long id) {
