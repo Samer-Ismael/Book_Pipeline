@@ -38,6 +38,7 @@ public class AuthorService {
         authorRepo.deleteById(id);
     }
 
+    //TODO
     public Author updateAuthor(Long id, Author author) {
         if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");
         Author authorToUpdate = findAuthorById(id);
