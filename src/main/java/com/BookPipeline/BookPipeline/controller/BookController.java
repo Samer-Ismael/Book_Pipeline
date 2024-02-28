@@ -29,6 +29,8 @@ public class BookController {
     public ResponseEntity<Book> getBook(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(bookService.findBookById(id));
+        } catch (NoResultException e) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -48,6 +50,8 @@ public class BookController {
         try {
             bookService.deleteBookById(id);
             return ResponseEntity.ok(new DeleteResponse(DeleteResponse.DeleteResponseMessage.SUCCESS));
+        } catch (NoResultException e) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -56,6 +60,8 @@ public class BookController {
     public ResponseEntity<Book> updateBook(@RequestBody Book book)  {
         try {
             return ResponseEntity.ok(bookService.updateBook(book.getId(), book));
+        } catch (NoResultException e) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

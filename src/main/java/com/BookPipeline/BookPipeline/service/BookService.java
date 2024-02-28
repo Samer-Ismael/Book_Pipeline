@@ -1,6 +1,5 @@
 package com.BookPipeline.BookPipeline.service;
 
-import com.BookPipeline.BookPipeline.entity.Author;
 import com.BookPipeline.BookPipeline.entity.Book;
 import com.BookPipeline.BookPipeline.repository.BookRepository;
 import jakarta.persistence.NoResultException;
@@ -11,9 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-//TODO - om titel är tom eller null
-//TODO - om author name är null eller tom
-//TODO - om author id är tom validera author och lägg till author, sen lägg till book
 @Service
 @RequiredArgsConstructor
 public class BookService {
@@ -25,6 +21,7 @@ public class BookService {
     }
 
     public Book findBookById(Long id) {
+        if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");
         return bookRepo.findById(id).orElseThrow(() -> new NoResultException("Book not found"));
     }
 
@@ -43,10 +40,12 @@ public class BookService {
     }
 
     public void deleteBookById(Long id) {
+        if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");
         bookRepo.deleteById(id);
     }
 
     public Book updateBook(Long id, Book book) {
+        if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");
         Book bookToUpdate = findBookById(id);
 
         bookToUpdate.setTitle(book.getTitle());
@@ -56,6 +55,7 @@ public class BookService {
     }
 
     public List<Book> findBooksByAuthorId(Long id) {
+        if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");
         authorService.findAuthorById(id);
 
         List<Book> books = bookRepo.findAllByAuthorId(id);

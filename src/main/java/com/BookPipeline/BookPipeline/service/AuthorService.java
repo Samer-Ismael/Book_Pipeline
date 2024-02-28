@@ -18,6 +18,7 @@ public class AuthorService {
     }
 
     public Author findAuthorById(Long id) {
+        if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");
         return authorRepo.findById(id).orElseThrow(() -> new NoResultException("Author not found"));
     }
 
@@ -26,10 +27,12 @@ public class AuthorService {
     }
 
     public void deleteAuthorById(Long id) {
+        if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");
         authorRepo.deleteById(id);
     }
 
     public Author updateAuthor(Long id, Author author) {
+        if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");
         Author authorToUpdate = findAuthorById(id);
 
         authorToUpdate.setName(author.getName());
