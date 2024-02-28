@@ -1,15 +1,16 @@
 package com.BookPipeline.BookPipeline.service;
 
 import com.BookPipeline.BookPipeline.entity.Book;
-import com.BookPipeline.BookPipeline.repository.AuthorRepository;
 import com.BookPipeline.BookPipeline.repository.BookRepository;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.BookPipeline.BookPipeline.entity.Author;
 
 import java.util.List;
 
+//TODO - om titel är tom eller null
+//TODO - om author name är null eller tom
+//TODO - om author id är tom validera author och lägg till author, sen lägg till book
 @Service
 @RequiredArgsConstructor
 public class BookService {
