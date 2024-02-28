@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,28 +39,28 @@ public class AuthorService {
         authorRepo.deleteById(id);
     }
 
-    //TODO
-    public Author updateAuthor(Long id, Author author) {
-        if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");
-        Author authorToUpdate = findAuthorById(id);
+    public Optional<Author> updateAuthor(Long id, Author updatedAuthor) {
+        if (id == null || id < 1) {
+            throw new IllegalArgumentException("No valid id was found");
+        }
 
-        authorToUpdate.setName(author.getName());
+        if (updatedAuthor.getName() == null) {
+            throw new IllegalArgumentException("Author name cannot be null");
+        }
 
-        return authorRepo.save(authorToUpdate);
+        Optional<Author> authorToUpdateOptional = authorRepo.findById(id);
+        if (authorToUpdateOptional.isPresent()) {
+            Author authorToUpdate = authorToUpdateOptional.get();
+
+            if (updatedAuthor.getName().isEmpty()) {
+                throw new IllegalArgumentException("Author name cannot be empty");
+            } else {
+                authorToUpdate.setName(updatedAuthor.getName());
+            }
+
+            return Optional.of(authorRepo.save(authorToUpdate));
+        } else {
+            return Optional.empty();
+        }
     }
-
-    // Samers sätt:
-    // först hämta author med optional
-    // om den inte finns returner notfound error
-    // finns den- sätt nya värden på det som inte är null, annars använd samma värden som i optional author
-    // sen save()
-
-        /*if (userService.existsById(id)) {
-        UserEntity newUser = userService.findById(id).get();
-        // that will make it easier to update the user, if the field is null, it will not be updated
-        if (updatedUser.getPassword() == null) updatedUser.setPassword(newUser.getPassword());
-        if (updatedUser.getRole() == null) updatedUser.setRole(newUser.getRole());
-        if (updatedUser.getUsername() == null) updatedUser.setUsername(newUser.getUsername());
-
-        userService.updateUserById(id, updatedUser);*/
 }

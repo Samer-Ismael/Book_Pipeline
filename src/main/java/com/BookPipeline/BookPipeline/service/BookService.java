@@ -1,13 +1,14 @@
 package com.BookPipeline.BookPipeline.service;
 
+import com.BookPipeline.BookPipeline.entity.Author;
 import com.BookPipeline.BookPipeline.entity.Book;
-import com.BookPipeline.BookPipeline.login.model.UserEntity;
 import com.BookPipeline.BookPipeline.repository.BookRepository;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,31 +44,31 @@ public class BookService {
         bookRepo.deleteById(id);
     }
 
-    //TODO
-    public Book updateBook(Long id, Book book) {
+    public Optional<Book> updateBook(Long id, Book updatedBook) {
         if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");
-        Book bookToUpdate = findBookById(id);
 
-        bookToUpdate.setTitle(book.getTitle());
-        bookToUpdate.setAuthor(book.getAuthor());
+        Optional<Book> existingBook = bookRepo.findById(id);
+        if (existingBook.isPresent()) {
+            Book bookToUpdate = existingBook.get();
 
-        return bookRepo.save(bookToUpdate);
+            // if updatedbooks author is not null, check it id for updates
+            if (updatedBook.getAuthor() != null && updatedBook.getAuthor().getId() != null) {
+                Author updatedAuthor = authorService.findAuthorById(updatedBook.getAuthor().getId());
+                bookToUpdate.setAuthor(updatedAuthor);
+            }
+
+            // check if title needs to be updated
+            if (updatedBook.getTitle() == null) {
+                updatedBook.setTitle(bookToUpdate.getTitle());
+            } else if (updatedBook.getTitle().isEmpty()) {
+                updatedBook.setTitle(bookToUpdate.getTitle());
+            }
+
+            return Optional.of(bookRepo.save(updatedBook));
+        } else {
+            return Optional.empty();
+        }
     }
-
-    // Samers sätt:
-    // först hämta book med optional
-    // om den inte finns returner notfound error
-    // finns den- sätt nya värden på det som inte är null, annars använd samma värden som i optional book
-    // sen save()
-
-        /*if (userService.existsById(id)) {
-        UserEntity newUser = userService.findById(id).get();
-        // that will make it easier to update the user, if the field is null, it will not be updated
-        if (updatedUser.getPassword() == null) updatedUser.setPassword(newUser.getPassword());
-        if (updatedUser.getRole() == null) updatedUser.setRole(newUser.getRole());
-        if (updatedUser.getUsername() == null) updatedUser.setUsername(newUser.getUsername());
-
-        userService.updateUserById(id, updatedUser);*/
 
     public List<Book> findBooksByAuthorId(Long id) {
         if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");

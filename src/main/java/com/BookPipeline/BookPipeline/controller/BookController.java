@@ -4,18 +4,20 @@ import com.BookPipeline.BookPipeline.entity.Book;
 import com.BookPipeline.BookPipeline.model.DeleteResponse;
 import com.BookPipeline.BookPipeline.service.BookService;
 import jakarta.persistence.NoResultException;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/books")
 @RequiredArgsConstructor
 public class BookController {
     private final BookService bookService;
+    @Operation(summary = "Get all books")
     @GetMapping
     public ResponseEntity<List<Book>> getBooks() {
         try {
@@ -25,6 +27,7 @@ public class BookController {
         }
     }
 
+    @Operation(summary = "Get book by id")
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBook(@PathVariable Long id) {
         try {
@@ -35,6 +38,7 @@ public class BookController {
             return ResponseEntity.badRequest().build();
         }
     }
+    @Operation(summary = "Save book")
     @PostMapping
     public ResponseEntity<Book> saveBook(@RequestBody Book book) {
         try {
@@ -43,6 +47,7 @@ public class BookController {
             return ResponseEntity.badRequest().build();
         }
     }
+    @Operation(summary = "Delete book by id")
     @DeleteMapping("/{id}")
     public ResponseEntity<DeleteResponse> deleteBook(@PathVariable Long id) {
         try {
@@ -54,8 +59,9 @@ public class BookController {
             return ResponseEntity.badRequest().build();
         }
     }
+    @Operation(summary = "Replace book with new book by id")
     @PutMapping("")
-    public ResponseEntity<Book> updateBook(@RequestBody Book book)  {
+    public ResponseEntity<Optional<Book>> updateBook(@RequestBody Book book)  {
         try {
             return ResponseEntity.ok(bookService.updateBook(book.getId(), book));
         } catch (NoResultException e) {
