@@ -62,7 +62,8 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "This is for updating a user, for admins only")
+    @Operation(summary = "This is for updating a user, for admins only. Updates only the fields that are set.\n" +
+    "eg. {\"role\": \"ROLE_ADMIN\"} to set user with id to admin.")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<String> updateUserById(@PathVariable Long id, @RequestBody UserEntity updatedUser) {
