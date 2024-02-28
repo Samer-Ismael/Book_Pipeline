@@ -7,6 +7,7 @@ import com.BookPipeline.BookPipeline.login.model.Roles;
 import com.BookPipeline.BookPipeline.login.model.UserEntity;
 import com.BookPipeline.BookPipeline.login.service.JWTService;
 import com.BookPipeline.BookPipeline.login.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -43,6 +44,7 @@ public class AuthController {
     //----------------------------------------------------------------------
     // The register method handles the registration of new users.
     // It checks if the username already exists, if not, it creates a new user with the provided details.
+    @Operation(summary = "This is for registering a new user")
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody AuthRequest user) {
 
@@ -68,6 +70,7 @@ public class AuthController {
     // The authAndGetToken method handles the authentication of users.
     // It authenticates the user and if successful, generates a JWT token for the user.
     // Here you can ask for payment or something else before generating the token.
+    @Operation(summary = "This is for logging in a user and getting a token for the user.")
     @PostMapping("/login")
     public ResponseEntity<String> authAndGetToken(@RequestBody AuthRequest authRequest) {
         try {
