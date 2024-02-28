@@ -15,7 +15,6 @@ phases:
         #This command will print a message to the console if the unit tests pass
       - echo "Unit tests passed"
       - echo "Deploying..."
-      - echo "Deployment complete!"
 
 artifacts:
     files:
