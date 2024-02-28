@@ -22,7 +22,6 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
 
-
     public UserController(PasswordEncoder passwordEncoder, UserService userService) {
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
@@ -85,8 +84,6 @@ public class UserController {
         }
     }
 
-
-
     @Operation(summary = "This is for deleting the current user (Deleting you account), for users and admins")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @DeleteMapping("/me")
@@ -101,7 +98,6 @@ public class UserController {
         }
     }
 
-
     @Operation(summary = "This is for changing the password of the current user (Change your password), for users and admins")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PutMapping("/changePass")
@@ -114,7 +110,7 @@ public class UserController {
         if (passwordEncoder.matches(oldPass, user.getPassword())) {
             if (newPass.equals(confirmPass)) {
                 String badPass = PasswordValidator.validatePassword(newPass);
-                if (!badPass.equals("")) {
+                if (!badPass.isEmpty()) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(badPass);
                 }
                 user.setPassword(passwordEncoder.encode(newPass));
