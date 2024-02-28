@@ -7,6 +7,7 @@ import com.BookPipeline.BookPipeline.service.AuthorService;
 import com.BookPipeline.BookPipeline.service.BookService;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,7 @@ public class AuthorController {
             return ResponseEntity.badRequest().build();
         }
     }
+
     @DeleteMapping("{id}")
     public ResponseEntity<DeleteResponse> deleteAuthor(@PathVariable Long id) {
         try {

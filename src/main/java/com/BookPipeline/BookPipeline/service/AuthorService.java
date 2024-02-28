@@ -23,6 +23,13 @@ public class AuthorService {
     }
 
     public Author saveAuthor(Author author) {
+        if (author.getName() == null) {
+            throw new IllegalArgumentException("Author name cannot be empty");
+        }
+        if (author.getName().isEmpty()) {
+            throw new IllegalArgumentException("Author name cannot be empty");
+        }
+
         return authorRepo.save(author);
     }
 
