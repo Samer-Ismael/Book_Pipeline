@@ -107,6 +107,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>books-pipeline</finalName>
 	</build>
 
 </project>
