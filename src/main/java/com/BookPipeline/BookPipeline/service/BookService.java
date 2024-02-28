@@ -1,10 +1,12 @@
 package com.BookPipeline.BookPipeline.service;
 
 import com.BookPipeline.BookPipeline.entity.Book;
+import com.BookPipeline.BookPipeline.repository.AuthorRepository;
 import com.BookPipeline.BookPipeline.repository.BookRepository;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.BookPipeline.BookPipeline.entity.Author;
 
 import java.util.List;
 
@@ -12,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookService {
     private final BookRepository bookRepo;
+    private final AuthorService authorService;
 
     public List<Book> findAllBooks() {
         return bookRepo.findAll();
@@ -39,6 +42,14 @@ public class BookService {
     }
 
     public List<Book> findBooksByAuthorId(Long id) {
-        return bookRepo.findAllByAuthorId(id);
+        authorService.findAuthorById(id);
+
+        List<Book> books = bookRepo.findAllByAuthorId(id);
+
+        if (books.isEmpty()) {
+            throw new NoResultException("No books found for this author");
+        }
+
+        return books;
     }
 }

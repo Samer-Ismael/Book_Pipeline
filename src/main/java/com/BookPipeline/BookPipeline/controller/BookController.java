@@ -22,6 +22,7 @@ public class BookController {
             return ResponseEntity.badRequest().build();
         }
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBook(@PathVariable Long id) {
         try {
