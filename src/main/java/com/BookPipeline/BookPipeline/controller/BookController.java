@@ -3,7 +3,9 @@ package com.BookPipeline.BookPipeline.controller;
 import com.BookPipeline.BookPipeline.entity.Book;
 import com.BookPipeline.BookPipeline.model.DeleteResponse;
 import com.BookPipeline.BookPipeline.service.BookService;
+import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,9 +34,11 @@ public class BookController {
         }
     }
     @PostMapping
-    public ResponseEntity<Book> saveBook(@RequestBody Book book) {
+    public ResponseEntity<String> saveBook(@RequestBody Book book) {
         try {
-            return ResponseEntity.ok(bookService.saveBook(book));
+            return bookService.saveBook(book);
+        } catch (NoResultException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

@@ -1,7 +1,5 @@
 package com.BookPipeline.BookPipeline.login.service;
 
-
-import com.BookPipeline.BookPipeline.login.model.Roles;
 import com.BookPipeline.BookPipeline.login.model.UserEntity;
 import com.BookPipeline.BookPipeline.login.repo.UserRepo;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,14 +33,15 @@ public class UserService {
     public ResponseEntity<String> save(UserEntity user) {
         if (userRepo.existsByUsername(user.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Username already exists");
-        } else {
-            UserEntity newUser = new UserEntity();
-            newUser.setUsername(user.getUsername());
-            newUser.setPassword(user.getPassword());
-            newUser.setRole(Roles.ROLE_USER);
-            userRepo.save(newUser);
-            return new ResponseEntity<>(HttpStatus.OK);
         }
+        if (user.getUsername() == null || user.getPassword() == null || user.getRole() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or password cannot be empty");
+        }
+        if (user.getUsername().isEmpty() || user.getPassword().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username or password cannot be empty");
+        }
+        userRepo.save(user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // findAll method retrieves all users from the database.
