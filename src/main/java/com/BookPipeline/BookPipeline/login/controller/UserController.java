@@ -5,6 +5,7 @@ import com.BookPipeline.BookPipeline.login.filter.PasswordValidator;
 import com.BookPipeline.BookPipeline.login.model.ChangingPassword;
 import com.BookPipeline.BookPipeline.login.model.UserEntity;
 import com.BookPipeline.BookPipeline.login.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +28,7 @@ public class UserController {
         this.userService = userService;
     }
 
-
+    @Operation(summary = "This is for getting a user by name, for users and admins")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @GetMapping("/{name}")
     public ResponseEntity<UserEntity> getUserByName(@PathVariable String name) {
@@ -39,7 +40,7 @@ public class UserController {
         }
     }
 
-
+    @Operation(summary = "This is for getting all users, for users and admins")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<List<UserEntity>> getAllUsers() {
@@ -50,7 +51,7 @@ public class UserController {
         }
     }
 
-
+    @Operation(summary = "This is for deleting a user, for admins only")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<UserEntity> deleteUser(@PathVariable Long id) {
@@ -62,7 +63,7 @@ public class UserController {
         }
     }
 
-
+    @Operation(summary = "This is for updating a user, for admins only")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<String> updateUserById(@PathVariable Long id, @RequestBody UserEntity updatedUser) {
@@ -85,6 +86,8 @@ public class UserController {
     }
 
 
+
+    @Operation(summary = "This is for deleting the current user (Deleting you account), for users and admins")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @DeleteMapping("/me")
     public ResponseEntity<String> deleteUser(Principal principal) {
@@ -99,6 +102,7 @@ public class UserController {
     }
 
 
+    @Operation(summary = "This is for changing the password of the current user (Change your password), for users and admins")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PutMapping("/changePass")
     public ResponseEntity<String> changeUserPass(Principal principal, @RequestBody ChangingPassword changingPassword) {
