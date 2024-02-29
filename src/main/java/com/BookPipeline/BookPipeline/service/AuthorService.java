@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,22 +19,48 @@ public class AuthorService {
     }
 
     public Author findAuthorById(Long id) {
+        if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");
         return authorRepo.findById(id).orElseThrow(() -> new NoResultException("Author not found"));
     }
 
     public Author saveAuthor(Author author) {
+        if (author.getName() == null) {
+            throw new IllegalArgumentException("Author name cannot be empty");
+        }
+        if (author.getName().isEmpty()) {
+            throw new IllegalArgumentException("Author name cannot be empty");
+        }
+
         return authorRepo.save(author);
     }
 
     public void deleteAuthorById(Long id) {
+        if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");
         authorRepo.deleteById(id);
     }
 
-    public Author updateAuthor(Long id, Author author) {
-        Author authorToUpdate = findAuthorById(id);
+    public Optional<Author> updateAuthor(Long id, Author updatedAuthor) {
+        if (id == null || id < 1) {
+            throw new IllegalArgumentException("No valid id was found");
+        }
 
-        authorToUpdate.setName(author.getName());
+        if (updatedAuthor.getName() == null) {
+            throw new IllegalArgumentException("Author name cannot be null");
+        }
 
-        return authorRepo.save(authorToUpdate);
+        Optional<Author> authorToUpdateOptional = authorRepo.findById(id);
+        if (authorToUpdateOptional.isPresent()) {
+            Author authorToUpdate = authorToUpdateOptional.get();
+
+            if (updatedAuthor.getName().isEmpty()) {
+                throw new IllegalArgumentException("Author name cannot be empty");
+            } else {
+                authorToUpdate.setName(updatedAuthor.getName());
+            }
+
+            return Optional.of(authorRepo.save(authorToUpdate));
+        } else {
+            return Optional.empty();
+        }
     }
 }

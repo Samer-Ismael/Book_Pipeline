@@ -5,12 +5,14 @@ import com.BookPipeline.BookPipeline.entity.Book;
 import com.BookPipeline.BookPipeline.model.DeleteResponse;
 import com.BookPipeline.BookPipeline.service.AuthorService;
 import com.BookPipeline.BookPipeline.service.BookService;
+import jakarta.persistence.NoResultException;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/authors")
@@ -32,6 +34,8 @@ public class AuthorController {
     public ResponseEntity<Author> getAuthor(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(authorService.findAuthorById(id));
+        } catch (NoResultException e) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -45,21 +49,26 @@ public class AuthorController {
             return ResponseEntity.badRequest().build();
         }
     }
+
     @Operation(summary = "Delete author by id")
     @DeleteMapping("{id}")
     public ResponseEntity<DeleteResponse> deleteAuthor(@PathVariable Long id) {
         try {
             authorService.deleteAuthorById(id);
             return ResponseEntity.ok(new DeleteResponse(DeleteResponse.DeleteResponseMessage.SUCCESS));
+        } catch (NoResultException e) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
     @Operation(summary = "Replace author with new author by id")
     @PutMapping("")
-    public ResponseEntity<Author> updateAuthor(@RequestBody Author author)  {
+    public ResponseEntity<Optional<Author>> updateAuthor(@RequestBody Author author)  {
         try {
             return ResponseEntity.ok(authorService.updateAuthor(author.getId(), author));
+        } catch (NoResultException e) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -69,6 +78,8 @@ public class AuthorController {
     public ResponseEntity<List<Book>> getBooksByAuthor(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(bookService.findBooksByAuthorId(id));
+        } catch (NoResultException e) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
