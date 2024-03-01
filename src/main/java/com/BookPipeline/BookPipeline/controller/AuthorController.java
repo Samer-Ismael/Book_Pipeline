@@ -64,7 +64,7 @@ public class AuthorController {
     }
     @Operation(summary = "Replace author with new author by id")
     @PutMapping("")
-    public ResponseEntity<Optional<Author>> updateAuthor(@RequestBody Author author)  {
+    public ResponseEntity<Author> updateAuthor(@RequestBody Author author)  {
         try {
             return ResponseEntity.ok(authorService.updateAuthor(author.getId(), author));
         } catch (NoResultException e) {

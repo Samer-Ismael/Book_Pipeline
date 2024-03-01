@@ -26,52 +26,48 @@ public class BookService {
     }
 
     public Book saveBook(Book book) {
-        if (book.getTitle() == null || book.getAuthor() == null || book.getAuthor().getName() == null || book.getAuthor().getId() == null) {
+        if (book.getTitle() == null || book.getAuthor() == null || book.getAuthor().getId() == null) {
             throw new IllegalArgumentException("Title or Author cannot be empty");
         }
-        if (book.getTitle().isEmpty() || book.getAuthor().getName().isEmpty()) {
-            throw new IllegalArgumentException("Title or Author cannot be empty");
+        if (book.getTitle().isEmpty()) {
+            throw new IllegalArgumentException("Title cannot be empty");
         }
 
-        // Check if the author exists
-        authorService.findAuthorById(book.getAuthor().getId());
+        // if the author does not exist the book cannot be saved
+        Author author = authorService.findAuthorById(book.getAuthor().getId());
+        book.setAuthor(author);
 
         return bookRepo.save(book);
     }
 
     public void deleteBookById(Long id) {
-        if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");
+        findBookById(id);
         bookRepo.deleteById(id);
     }
 
-    public Optional<Book> updateBook(Long id, Book updatedBook) {
+    public Book updateBook(Long id, Book updatedBook) {
         if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");
 
-        Optional<Book> existingBook = bookRepo.findById(id);
-        if (existingBook.isPresent()) {
-            Book bookToUpdate = existingBook.get();
+        Book existingBook = findBookById(id);
 
-            // if updatedbooks author is not null, check it id for updates
-            if (updatedBook.getAuthor() != null && updatedBook.getAuthor().getId() != null) {
-                Author updatedAuthor = authorService.findAuthorById(updatedBook.getAuthor().getId());
-                bookToUpdate.setAuthor(updatedAuthor);
-            }
-
-            // check if title needs to be updated
-            if (updatedBook.getTitle() == null) {
-                updatedBook.setTitle(bookToUpdate.getTitle());
-            } else if (updatedBook.getTitle().isEmpty()) {
-                updatedBook.setTitle(bookToUpdate.getTitle());
-            }
-
-            return Optional.of(bookRepo.save(updatedBook));
-        } else {
-            return Optional.empty();
+        // if updatedbooks author is not null, check its id for updates
+        if (updatedBook.getAuthor() != null && updatedBook.getAuthor().getId() != null) {
+            // if the author does not exist the book cannot be saved
+            Author updatedAuthor = authorService.findAuthorById(updatedBook.getAuthor().getId());
+            existingBook.setAuthor(updatedAuthor);
         }
+
+        // check if title needs to be updated
+        if (updatedBook.getTitle() == null) {
+            updatedBook.setTitle(existingBook.getTitle());
+        } else if (updatedBook.getTitle().isEmpty()) {
+            updatedBook.setTitle(existingBook.getTitle());
+        }
+
+        return bookRepo.save(updatedBook);
     }
 
     public List<Book> findBooksByAuthorId(Long id) {
-        if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");
         authorService.findAuthorById(id);
 
         List<Book> books = bookRepo.findAllByAuthorId(id);

@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/books")
@@ -61,7 +60,7 @@ public class BookController {
     }
     @Operation(summary = "Replace book with new book by id")
     @PutMapping("")
-    public ResponseEntity<Optional<Book>> updateBook(@RequestBody Book book)  {
+    public ResponseEntity<Book> updateBook(@RequestBody Book book)  {
         try {
             return ResponseEntity.ok(bookService.updateBook(book.getId(), book));
         } catch (NoResultException e) {
