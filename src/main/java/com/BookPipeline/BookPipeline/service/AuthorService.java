@@ -40,8 +40,6 @@ public class AuthorService {
     }
 
     public Author updateAuthor(Long id, Author updatedAuthor) {
-
-    public Optional<Author> updateAuthor(Long id, Author updatedAuthor) throws NoResultException, IllegalArgumentException {
         if (id == null || id < 1) {
             throw new IllegalArgumentException("No valid id was found");
         }
@@ -49,15 +47,12 @@ public class AuthorService {
         if (updatedAuthor.getName() == null) {
             throw new IllegalArgumentException("Author name cannot be null");
         }
-
         Author authorToUpdate = findAuthorById(id);
         if (updatedAuthor.getName().isEmpty()) {
             throw new IllegalArgumentException("Author name cannot be empty");
         } else {
             authorToUpdate.setName(updatedAuthor.getName());
-            throw new NoResultException("Author not found");
+            return authorRepo.save(authorToUpdate);
         }
-
-        return authorRepo.save(authorToUpdate);
     }
 }

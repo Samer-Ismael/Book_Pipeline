@@ -1,5 +1,3 @@
-# Book_Pipeline
-
 # OpenAPI definition
 
 > Version v0
@@ -8,24 +6,26 @@
 
 | Method | Path | Description |
 | --- | --- | --- |
-| PUT | [/users/{id}](#putusersid) |  |
-| DELETE | [/users/{id}](#deleteusersid) |  |
-| PUT | [/users/changePass](#putuserschangepass) |  |
-| GET | [/books](#getbooks) |  |
-| PUT | [/books](#putbooks) |  |
-| POST | [/books](#postbooks) |  |
-| GET | [/authors](#getauthors) |  |
-| PUT | [/authors](#putauthors) |  |
-| POST | [/authors](#postauthors) |  |
-| POST | [/auth/register](#postauthregister) |  |
-| POST | [/auth/login](#postauthlogin) |  |
-| GET | [/users/{name}](#getusersname) |  |
-| GET | [/users/all](#getusersall) |  |
-| GET | [/books/{id}](#getbooksid) |  |
-| DELETE | [/books/{id}](#deletebooksid) |  |
-| GET | [/authors/{id}](#getauthorsid) |  |
-| DELETE | [/authors/{id}](#deleteauthorsid) |  |
-| DELETE | [/users/me](#deleteusersme) |  |
+| PUT | [/users/{id}](#putusersid) | This is for updating a user, for admins only. Updates only the fields that are set.
+eg. {"role": "ROLE_ADMIN"} to set user with id to admin. |
+| DELETE | [/users/{id}](#deleteusersid) | This is for deleting a user, for admins only |
+| PUT | [/users/changePass](#putuserschangepass) | This is for changing the password of the current user (Change your password), for users and admins |
+| GET | [/books](#getbooks) | Get all books |
+| PUT | [/books](#putbooks) | Replace book with new book by id |
+| POST | [/books](#postbooks) | Save book |
+| GET | [/authors](#getauthors) | Get all authors |
+| PUT | [/authors](#putauthors) | Replace author with new author by id |
+| POST | [/authors](#postauthors) | Save author |
+| POST | [/auth/register](#postauthregister) | This is for registering a new user |
+| POST | [/auth/login](#postauthlogin) | This is for logging in a user and getting a token for the user. |
+| GET | [/users/{name}](#getusersname) | This is for getting a user by name, for users and admins |
+| GET | [/users/all](#getusersall) | This is for getting all users, for users and admins |
+| GET | [/books/{id}](#getbooksid) | Get book by id |
+| DELETE | [/books/{id}](#deletebooksid) | Delete book by id |
+| GET | [/authors/{id}](#getauthorsid) | Get author by id |
+| DELETE | [/authors/{id}](#deleteauthorsid) | Delete author by id |
+| GET | [/authors/{id}/books](#getauthorsidbooks) | Get all books by author id |
+| DELETE | [/users/me](#deleteusersme) | This is for deleting the current user (Deleting you account), for users and admins |
 
 ## Reference Table
 
@@ -35,7 +35,6 @@
 | ChangingPassword | [#/components/schemas/ChangingPassword](#componentsschemaschangingpassword) |  |
 | Author | [#/components/schemas/Author](#componentsschemasauthor) |  |
 | Book | [#/components/schemas/Book](#componentsschemasbook) |  |
-| AuthorPutRequest | [#/components/schemas/AuthorPutRequest](#componentsschemasauthorputrequest) |  |
 | AuthRequest | [#/components/schemas/AuthRequest](#componentsschemasauthrequest) |  |
 | DeleteResponse | [#/components/schemas/DeleteResponse](#componentsschemasdeleteresponse) |  |
 
@@ -44,6 +43,10 @@
 ***
 
 ### [PUT]/users/{id}
+
+- Summary  
+  This is for updating a user, for admins only. Updates only the fields that are set.  
+  eg. {"role": "ROLE_ADMIN"} to set user with id to admin.
 
 #### RequestBody
 
@@ -74,6 +77,9 @@
 
 ### [DELETE]/users/{id}
 
+- Summary  
+  This is for deleting a user, for admins only
+
 #### Responses
 
 - 200 OK
@@ -92,6 +98,9 @@
 ***
 
 ### [PUT]/users/changePass
+
+- Summary  
+  This is for changing the password of the current user (Change your password), for users and admins
 
 #### RequestBody
 
@@ -121,6 +130,9 @@
 
 ### [GET]/books
 
+- Summary  
+  Get all books
+
 #### Responses
 
 - 200 OK
@@ -132,6 +144,8 @@
   id?: integer
   title?: string
   author: {
+    id?: integer
+    name?: string
   }
 }[]
 ```
@@ -140,6 +154,9 @@
 
 ### [PUT]/books
 
+- Summary  
+  Replace book with new book by id
+
 #### RequestBody
 
 - application/json
@@ -149,6 +166,8 @@
   id?: integer
   title?: string
   author: {
+    id?: integer
+    name?: string
   }
 }
 ```
@@ -164,6 +183,8 @@
   id?: integer
   title?: string
   author: {
+    id?: integer
+    name?: string
   }
 }
 ```
@@ -172,6 +193,9 @@
 
 ### [POST]/books
 
+- Summary  
+  Save book
+
 #### RequestBody
 
 - application/json
@@ -181,6 +205,8 @@
   id?: integer
   title?: string
   author: {
+    id?: integer
+    name?: string
   }
 }
 ```
@@ -193,13 +219,21 @@
 
 ```ts
 {
-  "type": "string"
+  id?: integer
+  title?: string
+  author: {
+    id?: integer
+    name?: string
+  }
 }
 ```
 
 ***
 
 ### [GET]/authors
+
+- Summary  
+  Get all authors
 
 #### Responses
 
@@ -209,12 +243,17 @@
 
 ```ts
 {
+  id?: integer
+  name?: string
 }[]
 ```
 
 ***
 
 ### [PUT]/authors
+
+- Summary  
+  Replace author with new author by id
 
 #### RequestBody
 
@@ -235,6 +274,8 @@
 
 ```ts
 {
+  id?: integer
+  name?: string
 }
 ```
 
@@ -242,12 +283,17 @@
 
 ### [POST]/authors
 
+- Summary  
+  Save author
+
 #### RequestBody
 
 - application/json
 
 ```ts
 {
+  id?: integer
+  name?: string
 }
 ```
 
@@ -259,12 +305,17 @@
 
 ```ts
 {
+  id?: integer
+  name?: string
 }
 ```
 
 ***
 
 ### [POST]/auth/register
+
+- Summary  
+  This is for registering a new user
 
 #### RequestBody
 
@@ -293,6 +344,9 @@
 
 ### [POST]/auth/login
 
+- Summary  
+  This is for logging in a user and getting a token for the user.
+
 #### RequestBody
 
 - application/json
@@ -320,6 +374,9 @@
 
 ### [GET]/users/{name}
 
+- Summary  
+  This is for getting a user by name, for users and admins
+
 #### Responses
 
 - 200 OK
@@ -338,6 +395,9 @@
 ***
 
 ### [GET]/users/all
+
+- Summary  
+  This is for getting all users, for users and admins
 
 #### Responses
 
@@ -358,6 +418,9 @@
 
 ### [GET]/books/{id}
 
+- Summary  
+  Get book by id
+
 #### Responses
 
 - 200 OK
@@ -369,6 +432,8 @@
   id?: integer
   title?: string
   author: {
+    id?: integer
+    name?: string
   }
 }
 ```
@@ -377,36 +442,8 @@
 
 ### [DELETE]/books/{id}
 
-#### Responses
-
-- 200 OK
-
-`*/*`
-
-```ts
-{
-  "type": "string"
-}
-```
-
-***
-
-### [GET]/authors/{id}
-
-#### Responses
-
-- 200 OK
-
-`*/*`
-
-```ts
-{
-}
-```
-
-***
-
-### [DELETE]/authors/{id}
+- Summary  
+  Delete book by id
 
 #### Responses
 
@@ -422,7 +459,73 @@
 
 ***
 
+### [GET]/authors/{id}
+
+- Summary  
+  Get author by id
+
+#### Responses
+
+- 200 OK
+
+`*/*`
+
+```ts
+{
+  id?: integer
+  name?: string
+}
+```
+
+***
+
+### [DELETE]/authors/{id}
+
+- Summary  
+  Delete author by id
+
+#### Responses
+
+- 200 OK
+
+`*/*`
+
+```ts
+{
+  message?: enum[SUCCESS, FAILURE]
+}
+```
+
+***
+
+### [GET]/authors/{id}/books
+
+- Summary  
+  Get all books by author id
+
+#### Responses
+
+- 200 OK
+
+`*/*`
+
+```ts
+{
+  id?: integer
+  title?: string
+  author: {
+    id?: integer
+    name?: string
+  }
+}[]
+```
+
+***
+
 ### [DELETE]/users/me
+
+- Summary  
+  This is for deleting the current user (Deleting you account), for users and admins
 
 #### Responses
 
@@ -463,6 +566,8 @@
 
 ```ts
 {
+  id?: integer
+  name?: string
 }
 ```
 
@@ -473,16 +578,9 @@
   id?: integer
   title?: string
   author: {
+    id?: integer
+    name?: string
   }
-}
-```
-
-### #/components/schemas/AuthorPutRequest
-
-```ts
-{
-  id?: integer
-  name?: string
 }
 ```
 
