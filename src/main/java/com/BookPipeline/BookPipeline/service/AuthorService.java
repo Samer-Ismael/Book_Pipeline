@@ -60,7 +60,7 @@ public class AuthorService {
 
             return Optional.of(authorRepo.save(authorToUpdate));
         } else {
-            return Optional.empty();
+            throw new NoResultException("Author not found");
         }
     }
 }
