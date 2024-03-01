@@ -39,7 +39,7 @@ public class AuthorService {
         authorRepo.deleteById(id);
     }
 
-    public Optional<Author> updateAuthor(Long id, Author updatedAuthor) {
+    public Optional<Author> updateAuthor(Long id, Author updatedAuthor) throws NoResultException, IllegalArgumentException {
         if (id == null || id < 1) {
             throw new IllegalArgumentException("No valid id was found");
         }
@@ -60,7 +60,7 @@ public class AuthorService {
 
             return Optional.of(authorRepo.save(authorToUpdate));
         } else {
-            return Optional.empty();
+            throw new NoResultException("Author not found");
         }
     }
 }
