@@ -45,6 +45,7 @@ public class BookService {
         bookRepo.deleteById(id);
     }
 
+    //TODO ändra till UpdateBookRequest och kolla efter UpdateBBokReq.authorId/.bookId/.title
     public Book updateBook(Long id, Book updatedBook) {
         if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");
 
