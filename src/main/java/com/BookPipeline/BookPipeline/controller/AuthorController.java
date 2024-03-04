@@ -3,6 +3,7 @@ package com.BookPipeline.BookPipeline.controller;
 import com.BookPipeline.BookPipeline.entity.Author;
 import com.BookPipeline.BookPipeline.entity.Book;
 import com.BookPipeline.BookPipeline.model.DeleteResponse;
+import com.BookPipeline.BookPipeline.model.SaveAuthorRequest;
 import com.BookPipeline.BookPipeline.service.AuthorService;
 import com.BookPipeline.BookPipeline.service.BookService;
 import jakarta.persistence.NoResultException;
@@ -42,9 +43,9 @@ public class AuthorController {
     }
     @Operation(summary = "Save author")
     @PostMapping("")
-    public ResponseEntity<Author> saveAuthor(@RequestBody Author author) {
+    public ResponseEntity<Author> saveAuthor(@RequestBody SaveAuthorRequest request) {
         try {
-            return ResponseEntity.ok(authorService.saveAuthor(author));
+            return ResponseEntity.ok(authorService.saveAuthor(request));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

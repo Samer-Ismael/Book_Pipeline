@@ -1,6 +1,7 @@
 package com.BookPipeline.BookPipeline.service;
 
 import com.BookPipeline.BookPipeline.entity.Author;
+import com.BookPipeline.BookPipeline.model.SaveAuthorRequest;
 import com.BookPipeline.BookPipeline.repository.AuthorRepository;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
@@ -23,15 +24,18 @@ public class AuthorService {
         return authorRepo.findById(id).orElseThrow(() -> new NoResultException("Author not found"));
     }
 
-    public Author saveAuthor(Author author) {
-        if (author.getName() == null) {
+    public Author saveAuthor(SaveAuthorRequest author) {
+        if (author.name() == null) {
             throw new IllegalArgumentException("Author name cannot be empty");
         }
-        if (author.getName().isEmpty()) {
+        if (author.name().isEmpty()) {
             throw new IllegalArgumentException("Author name cannot be empty");
         }
+        Author authorToSave = Author.builder()
+                .name(author.name())
+                .build();
 
-        return authorRepo.save(author);
+        return authorRepo.save(authorToSave);
     }
 
     public void deleteAuthorById(Long id) {
