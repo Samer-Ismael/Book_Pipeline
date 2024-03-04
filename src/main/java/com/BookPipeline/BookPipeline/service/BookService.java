@@ -2,6 +2,8 @@ package com.BookPipeline.BookPipeline.service;
 
 import com.BookPipeline.BookPipeline.entity.Author;
 import com.BookPipeline.BookPipeline.entity.Book;
+import com.BookPipeline.BookPipeline.model.SaveBookRequest;
+import com.BookPipeline.BookPipeline.model.UpdateBookRequest;
 import com.BookPipeline.BookPipeline.repository.BookRepository;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
@@ -25,19 +27,22 @@ public class BookService {
         return bookRepo.findById(id).orElseThrow(() -> new NoResultException("Book not found"));
     }
 
-    public Book saveBook(Book book) {
-        if (book.getTitle() == null || book.getAuthor() == null || book.getAuthor().getId() == null) {
+    public Book saveBook(SaveBookRequest book) {
+        if (book.title() == null || book.authorId() == null) {
             throw new IllegalArgumentException("Title or Author cannot be empty");
         }
-        if (book.getTitle().isEmpty()) {
+        if (book.title().isEmpty()) {
             throw new IllegalArgumentException("Title cannot be empty");
         }
 
         // if the author does not exist the book cannot be saved
-        Author author = authorService.findAuthorById(book.getAuthor().getId());
-        book.setAuthor(author);
+        Author author = authorService.findAuthorById(book.authorId());
+        Book bookToSave = Book.builder()
+                .title(book.title())
+                .author(author)
+                .build();
 
-        return bookRepo.save(book);
+        return bookRepo.save(bookToSave);
     }
 
     public void deleteBookById(Long id) {
@@ -45,27 +50,23 @@ public class BookService {
         bookRepo.deleteById(id);
     }
 
-    //TODO ändra till UpdateBookRequest och kolla efter UpdateBBokReq.authorId/.bookId/.title
-    public Book updateBook(Long id, Book updatedBook) {
+    public Book updateBook(Long id, UpdateBookRequest book) {
         if (id == null || id < 1) throw new IllegalArgumentException("No valid id was found");
 
-        Book existingBook = findBookById(id);
+        Book bookToUpdate = findBookById(id);
 
-        // if updatedbooks author is not null, check its id for updates
-        if (updatedBook.getAuthor() != null && updatedBook.getAuthor().getId() != null) {
+        if (book.authorId() != null) {
             // if the author does not exist the book cannot be saved
-            Author updatedAuthor = authorService.findAuthorById(updatedBook.getAuthor().getId());
-            existingBook.setAuthor(updatedAuthor);
+            Author updatedAuthor = authorService.findAuthorById(book.authorId());
+            bookToUpdate.setAuthor(updatedAuthor);
         }
 
         // check if title needs to be updated
-        if (updatedBook.getTitle() == null) {
-            updatedBook.setTitle(existingBook.getTitle());
-        } else if (updatedBook.getTitle().isEmpty()) {
-            updatedBook.setTitle(existingBook.getTitle());
+        if (book.title() != null && !book.title().isEmpty()) {
+            bookToUpdate.setTitle(book.title());
         }
 
-        return bookRepo.save(updatedBook);
+        return bookRepo.save(bookToUpdate);
     }
 
     public List<Book> findBooksByAuthorId(Long id) {

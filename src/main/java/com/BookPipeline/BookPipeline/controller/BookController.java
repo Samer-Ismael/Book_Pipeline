@@ -2,6 +2,8 @@ package com.BookPipeline.BookPipeline.controller;
 
 import com.BookPipeline.BookPipeline.entity.Book;
 import com.BookPipeline.BookPipeline.model.DeleteResponse;
+import com.BookPipeline.BookPipeline.model.SaveBookRequest;
+import com.BookPipeline.BookPipeline.model.UpdateBookRequest;
 import com.BookPipeline.BookPipeline.service.BookService;
 import jakarta.persistence.NoResultException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,9 +41,9 @@ public class BookController {
     }
     @Operation(summary = "Save book")
     @PostMapping
-    public ResponseEntity<Book> saveBook(@RequestBody Book book) {
+    public ResponseEntity<Book> saveBook(@RequestBody SaveBookRequest request) {
         try {
-            return ResponseEntity.ok(bookService.saveBook(book));
+            return ResponseEntity.ok(bookService.saveBook(request));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -60,9 +62,9 @@ public class BookController {
     }
     @Operation(summary = "Replace book with new book by id")
     @PutMapping("")
-    public ResponseEntity<Book> updateBook(@RequestBody Book book)  {
+    public ResponseEntity<Book> updateBook(@RequestBody UpdateBookRequest request)  {
         try {
-            return ResponseEntity.ok(bookService.updateBook(book.getId(), book));
+            return ResponseEntity.ok(bookService.updateBook(request.bookId(), request));
         } catch (NoResultException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
