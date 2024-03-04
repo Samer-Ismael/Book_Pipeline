@@ -2,12 +2,14 @@ package com.BookPipeline.BookPipeline.login.controller;
 
 
 import com.BookPipeline.BookPipeline.login.filter.PasswordValidator;
-import com.BookPipeline.BookPipeline.login.model.AuthRequest;
-import com.BookPipeline.BookPipeline.login.model.Roles;
-import com.BookPipeline.BookPipeline.login.model.UserEntity;
+import com.BookPipeline.BookPipeline.login.model.*;
 import com.BookPipeline.BookPipeline.login.service.JWTService;
 import com.BookPipeline.BookPipeline.login.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,16 +47,20 @@ public class AuthController {
     // The register method handles the registration of new users.
     // It checks if the username already exists, if not, it creates a new user with the provided details.
     @Operation(summary = "This is for registering a new user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User registered successfully"),
+            @ApiResponse(responseCode = "400", description = "User not registered successfully, details in message")
+    })
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody AuthRequest user) {
+    public ResponseEntity<ResponseMessage> register(@RequestBody AuthRequest user) {
 
         if (userService.existsByUsername(user.getUsername())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("Username already exists"));
         } else {
 
             String badPass = PasswordValidator.validatePassword(user.getPassword());
-            if (!badPass.equals("")) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(badPass);
+            if (!badPass.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(badPass));
             }
             UserEntity newUser = new UserEntity();
             newUser.setUsername(user.getUsername());
@@ -63,7 +69,7 @@ public class AuthController {
 
             userService.save(newUser);
 
-            return ResponseEntity.status(HttpStatus.OK).body("Registration successful!");
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("Registration successful!"));
         }
     }
 
@@ -71,18 +77,22 @@ public class AuthController {
     // It authenticates the user and if successful, generates a JWT token for the user.
     // Here you can ask for payment or something else before generating the token.
     @Operation(summary = "This is for logging in a user and getting a token for the user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User logged in successfully"),
+            @ApiResponse(responseCode = "401", description = "User not logged in successfully", content = @Content(schema = @Schema(hidden = true)))
+    })
     @PostMapping("/login")
-    public ResponseEntity<String> authAndGetToken(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<ResponseToken> authAndGetToken(@RequestBody AuthRequest authRequest) {
         try {
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 
             if (authentication.isAuthenticated()) {
-                return new ResponseEntity<>(jwtService.generateToken(authRequest.getUsername()), HttpStatus.OK);
+                return ResponseEntity.ok(new ResponseToken(jwtService.generateToken(authRequest.getUsername())));
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong username or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Wrong username or password");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }
