@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -24,19 +24,17 @@ public class AuthorService {
         return authorRepo.findById(id).orElseThrow(() -> new NoResultException("Author not found"));
     }
 
-    public Author saveAuthor(SaveAuthorRequest author) {
-        if (author.name() == null) {
+    public Author saveAuthor(SaveAuthorRequest request) {
+        if (request.getName() == null || request.getName().isEmpty()) {
             throw new IllegalArgumentException("Author name cannot be empty");
         }
-        if (author.name().isEmpty()) {
-            throw new IllegalArgumentException("Author name cannot be empty");
-        }
-        Author authorToSave = Author.builder()
-                .name(author.name())
-                .build();
+
+        Author authorToSave = new Author();
+        authorToSave.setName(request.getName());
 
         return authorRepo.save(authorToSave);
     }
+
 
     public void deleteAuthorById(Long id) {
         findAuthorById(id);
