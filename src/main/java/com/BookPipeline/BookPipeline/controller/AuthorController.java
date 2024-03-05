@@ -20,6 +20,7 @@ import java.util.List;
 public class AuthorController {
     private final AuthorService authorService;
     private final BookService bookService;
+
     @Operation(summary = "Get all authors")
     @GetMapping("")
     public ResponseEntity<List<Author>> getAuthors() {
@@ -29,6 +30,7 @@ public class AuthorController {
             return ResponseEntity.badRequest().build();
         }
     }
+
     @Operation(summary = "Get author by id")
     @GetMapping("/{id}")
     public ResponseEntity<Author> getAuthor(@PathVariable Long id) {
@@ -40,6 +42,7 @@ public class AuthorController {
             return ResponseEntity.badRequest().build();
         }
     }
+
     @Operation(summary = "Save author")
     @PostMapping("")
     public ResponseEntity<Author> saveAuthor(@RequestBody SaveAuthorRequest request) {
@@ -62,9 +65,10 @@ public class AuthorController {
             return ResponseEntity.badRequest().build();
         }
     }
+
     @Operation(summary = "Replace author with new author by id")
     @PutMapping("")
-    public ResponseEntity<Author> updateAuthor(@RequestBody Author author)  {
+    public ResponseEntity<Author> updateAuthor(@RequestBody Author author) {
         try {
             return ResponseEntity.ok(authorService.updateAuthor(author.getId(), author));
         } catch (NoResultException e) {
@@ -73,6 +77,7 @@ public class AuthorController {
             return ResponseEntity.badRequest().build();
         }
     }
+
     @Operation(summary = "Get all books by author id")
     @GetMapping("/{id}/books")
     public ResponseEntity<List<Book>> getBooksByAuthor(@PathVariable Long id) {
