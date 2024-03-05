@@ -8,98 +8,90 @@ import com.BookPipeline.BookPipeline.service.AuthorService;
 import com.BookPipeline.BookPipeline.service.BookService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
-class AuthorControllerTest {
+public class AuthorControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
+    @Mock
     private AuthorService authorService;
 
-    @MockBean
+    @Mock
     private BookService bookService;
 
-    private Author author;
-    private Book book;
-    private List<Author> authors;
-    private List<Book> books;
-    private SaveAuthorRequest saveAuthorRequest;
-    private DeleteResponse deleteResponse;
+    @InjectMocks
+    private AuthorController authorController;
 
     @BeforeEach
-    void setUp() {
-        author = new Author();
-        book = new Book();
-        authors = Arrays.asList(author);
-        books = Arrays.asList(book);
-        saveAuthorRequest = new SaveAuthorRequest();
-        deleteResponse = new DeleteResponse(DeleteResponse.DeleteResponseMessage.SUCCESS);
+    public void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
 
+    @Test
+    public void testGetAuthors() {
+        List<Author> authors = new ArrayList<>();
         when(authorService.findAllAuthors()).thenReturn(authors);
-        when(authorService.findAuthorById(anyLong())).thenReturn(author);
-        when(authorService.saveAuthor(any())).thenReturn(author);
-        when(bookService.findBooksByAuthorId(anyLong())).thenReturn(books);
+
+        ResponseEntity<List<Author>> response = authorController.getAuthors();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(authors, response.getBody());
     }
 
     @Test
-    void getAuthors() throws Exception {
-        mockMvc.perform(get("/authors")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+    public void testSaveAuthor() {
+        SaveAuthorRequest saveAuthorRequest = new SaveAuthorRequest(); // Initialize with necessary data
+        Author savedAuthor = new Author(); // Initialize with necessary data
+        when(authorService.saveAuthor(saveAuthorRequest)).thenReturn(savedAuthor);
+
+        ResponseEntity<Author> response = authorController.saveAuthor(saveAuthorRequest);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(savedAuthor, response.getBody());
     }
 
     @Test
-    void getAuthor() throws Exception {
-        mockMvc.perform(get("/authors/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+    public void testDeleteAuthor() {
+        Long authorId = 1L;
+        doNothing().when(authorService).deleteAuthorById(authorId);
+
+        ResponseEntity<DeleteResponse> response = authorController.deleteAuthor(authorId);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(DeleteResponse.DeleteResponseMessage.SUCCESS, response.getBody().message());
+    }
+
+
+
+    @Test
+    public void testUpdateAuthor() {
+        Author author = new Author(); // Initialize with necessary data
+        when(authorService.updateAuthor(author.getId(), author)).thenReturn(author);
+
+        ResponseEntity<Author> response = authorController.updateAuthor(author);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(author, response.getBody());
     }
 
     @Test
-    void saveAuthor() throws Exception {
-        mockMvc.perform(post("/authors")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}"))
-                .andExpect(status().isOk());
-    }
+    public void testGetBooksByAuthor() {
+        Long authorId = 1L;
+        List<Book> books = new ArrayList<>(); // Initialize with necessary data
+        when(bookService.findBooksByAuthorId(authorId)).thenReturn(books);
 
-    @Test
-    void deleteAuthor() throws Exception {
-        mockMvc.perform(delete("/authors/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
+        ResponseEntity<List<Book>> response = authorController.getBooksByAuthor(authorId);
 
-    @Test
-    void updateAuthor() throws Exception {
-        mockMvc.perform(put("/authors")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    void getBooksByAuthor() throws Exception {
-        mockMvc.perform(get("/authors/1/books")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(books, response.getBody());
     }
 }

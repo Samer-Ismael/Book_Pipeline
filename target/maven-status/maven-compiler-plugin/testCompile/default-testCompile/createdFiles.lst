@@ -1,1 +1,5 @@
+com\BookPipeline\BookPipeline\service\BookServiceTest.class
 com\BookPipeline\BookPipeline\BookPipelineApplicationTests.class
+com\BookPipeline\BookPipeline\controller\BookControllerTest.class
+com\BookPipeline\BookPipeline\controller\AuthorControllerTest.class
+com\BookPipeline\BookPipeline\service\AuthorServiceTest.class
