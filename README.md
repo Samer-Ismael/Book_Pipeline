@@ -32,10 +32,15 @@ eg. {"role": "ROLE_ADMIN"} to set user with id to admin. |
 | Name | Path | Description |
 | --- | --- | --- |
 | UserEntity | [#/components/schemas/UserEntity](#componentsschemasuserentity) |  |
+| ResponseMessage | [#/components/schemas/ResponseMessage](#componentsschemasresponsemessage) |  |
 | ChangingPassword | [#/components/schemas/ChangingPassword](#componentsschemaschangingpassword) |  |
+| UpdateBookRequest | [#/components/schemas/UpdateBookRequest](#componentsschemasupdatebookrequest) |  |
 | Author | [#/components/schemas/Author](#componentsschemasauthor) |  |
 | Book | [#/components/schemas/Book](#componentsschemasbook) |  |
+| SaveBookRequest | [#/components/schemas/SaveBookRequest](#componentsschemassavebookrequest) |  |
+| SaveAuthorRequest | [#/components/schemas/SaveAuthorRequest](#componentsschemassaveauthorrequest) |  |
 | AuthRequest | [#/components/schemas/AuthRequest](#componentsschemasauthrequest) |  |
+| ResponseToken | [#/components/schemas/ResponseToken](#componentsschemasresponsetoken) |  |
 | DeleteResponse | [#/components/schemas/DeleteResponse](#componentsschemasdeleteresponse) |  |
 
 ## Path Details
@@ -63,13 +68,23 @@ eg. {"role": "ROLE_ADMIN"} to set user with id to admin. |
 
 #### Responses
 
-- 200 OK
+- 200 User updated successfully
 
 `*/*`
 
 ```ts
 {
-  "type": "string"
+  message?: string
+}
+```
+
+- 404 User not found
+
+`*/*`
+
+```ts
+{
+  message?: string
 }
 ```
 
@@ -82,7 +97,20 @@ eg. {"role": "ROLE_ADMIN"} to set user with id to admin. |
 
 #### Responses
 
-- 200 OK
+- 200 User deleted successfully
+
+`*/*`
+
+```ts
+{
+  id?: integer
+  username?: string
+  password?: string
+  role?: enum[ROLE_USER, ROLE_ADMIN]
+}
+```
+
+- 404 User not found
 
 `*/*`
 
@@ -116,13 +144,23 @@ eg. {"role": "ROLE_ADMIN"} to set user with id to admin. |
 
 #### Responses
 
-- 200 OK
+- 200 Password changed successfully
 
 `*/*`
 
 ```ts
 {
-  "type": "string"
+  message?: string
+}
+```
+
+- 400 Bad request, details in message
+
+`*/*`
+
+```ts
+{
+  message?: string
 }
 ```
 
@@ -163,12 +201,9 @@ eg. {"role": "ROLE_ADMIN"} to set user with id to admin. |
 
 ```ts
 {
-  id?: integer
+  bookId?: integer
   title?: string
-  author: {
-    id?: integer
-    name?: string
-  }
+  authorId?: integer
 }
 ```
 
@@ -202,12 +237,8 @@ eg. {"role": "ROLE_ADMIN"} to set user with id to admin. |
 
 ```ts
 {
-  id?: integer
   title?: string
-  author: {
-    id?: integer
-    name?: string
-  }
+  authorId?: integer
 }
 ```
 
@@ -292,7 +323,6 @@ eg. {"role": "ROLE_ADMIN"} to set user with id to admin. |
 
 ```ts
 {
-  id?: integer
   name?: string
 }
 ```
@@ -330,13 +360,23 @@ eg. {"role": "ROLE_ADMIN"} to set user with id to admin. |
 
 #### Responses
 
-- 200 OK
+- 200 User registered successfully
 
 `*/*`
 
 ```ts
 {
-  "type": "string"
+  message?: string
+}
+```
+
+- 400 User not registered successfully, details in message
+
+`*/*`
+
+```ts
+{
+  message?: string
 }
 ```
 
@@ -360,15 +400,17 @@ eg. {"role": "ROLE_ADMIN"} to set user with id to admin. |
 
 #### Responses
 
-- 200 OK
+- 200 User logged in successfully
 
 `*/*`
 
 ```ts
 {
-  "type": "string"
+  token?: string
 }
 ```
+
+- 401 User not logged in successfully
 
 ***
 
@@ -379,7 +421,20 @@ eg. {"role": "ROLE_ADMIN"} to set user with id to admin. |
 
 #### Responses
 
-- 200 OK
+- 200 User found
+
+`*/*`
+
+```ts
+{
+  id?: integer
+  username?: string
+  password?: string
+  role?: enum[ROLE_USER, ROLE_ADMIN]
+}
+```
+
+- 404 User not found
 
 `*/*`
 
@@ -401,7 +456,20 @@ eg. {"role": "ROLE_ADMIN"} to set user with id to admin. |
 
 #### Responses
 
-- 200 OK
+- 200 Users found
+
+`*/*`
+
+```ts
+{
+  id?: integer
+  username?: string
+  password?: string
+  role?: enum[ROLE_USER, ROLE_ADMIN]
+}[]
+```
+
+- 404 Users not found
 
 `*/*`
 
@@ -529,13 +597,23 @@ eg. {"role": "ROLE_ADMIN"} to set user with id to admin. |
 
 #### Responses
 
-- 200 OK
+- 200 User deleted successfully
 
 `*/*`
 
 ```ts
 {
-  "type": "string"
+  message?: string
+}
+```
+
+- 404 User not found
+
+`*/*`
+
+```ts
+{
+  message?: string
 }
 ```
 
@@ -552,6 +630,14 @@ eg. {"role": "ROLE_ADMIN"} to set user with id to admin. |
 }
 ```
 
+### #/components/schemas/ResponseMessage
+
+```ts
+{
+  message?: string
+}
+```
+
 ### #/components/schemas/ChangingPassword
 
 ```ts
@@ -559,6 +645,16 @@ eg. {"role": "ROLE_ADMIN"} to set user with id to admin. |
   oldPassword?: string
   newPassword?: string
   confirmPassword?: string
+}
+```
+
+### #/components/schemas/UpdateBookRequest
+
+```ts
+{
+  bookId?: integer
+  title?: string
+  authorId?: integer
 }
 ```
 
@@ -584,12 +680,37 @@ eg. {"role": "ROLE_ADMIN"} to set user with id to admin. |
 }
 ```
 
+### #/components/schemas/SaveBookRequest
+
+```ts
+{
+  title?: string
+  authorId?: integer
+}
+```
+
+### #/components/schemas/SaveAuthorRequest
+
+```ts
+{
+  name?: string
+}
+```
+
 ### #/components/schemas/AuthRequest
 
 ```ts
 {
   username?: string
   password?: string
+}
+```
+
+### #/components/schemas/ResponseToken
+
+```ts
+{
+  token?: string
 }
 ```
 
