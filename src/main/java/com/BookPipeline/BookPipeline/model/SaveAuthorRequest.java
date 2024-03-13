@@ -1,20 +1,8 @@
 package com.BookPipeline.BookPipeline.model;
 
+import lombok.Data;
+
+@Data
 public class SaveAuthorRequest {
     private String name;
-
-    public SaveAuthorRequest(String name) {
-        this.name = name;
-    }
-
-    public SaveAuthorRequest() {
-
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String testAuthor) {
-    }
 }
