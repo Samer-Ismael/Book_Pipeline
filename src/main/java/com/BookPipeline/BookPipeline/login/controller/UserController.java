@@ -142,7 +142,7 @@ public class UserController {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(badPass));
                 }
                 user.setPassword(passwordEncoder.encode(newPass));
-                userService.save(user);
+                userService.updateUserById(user.getId(),user);
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage("Password changed successfully"));
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage("New password and confirm password do not match"));
